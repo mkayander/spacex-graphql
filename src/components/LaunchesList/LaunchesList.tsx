@@ -13,7 +13,7 @@ const List = styled.ul`
   flex-flow: row nowrap;
   //overflow-x: scroll;
 
-  padding: 2rem 0;
+  padding: 2rem;
 
   li:not(:first-child) {
     margin-left: 1.25rem;
@@ -23,7 +23,7 @@ const List = styled.ul`
 const Item = styled.li`
   position: relative;
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column-reverse wrap;
   min-width: 500px;
   overflow: hidden;
   background: #292f3b;
@@ -38,7 +38,21 @@ const Item = styled.li`
     object-fit: cover;
   }
 
+  :after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(to top, black 20%, transparent 100%);
+    opacity: 0.7;
+    z-index: 2;
+  }
+
   .content {
+    display: flex;
+    flex-flow: column nowrap;
     z-index: 5;
     padding: 1.75rem;
   }
@@ -54,14 +68,21 @@ const LaunchesList = () => {
   return (
     <ScrollContainer className={styles.root} vertical={false} horizontal={true}>
       <List>
-        {data?.launchesPast?.map(val => (
-          <Item key={val?.id}>
-            <img className="bg" src={val?.links?.mission_patch || undefined} alt="Mission patch" />
-            <div className="content">
-              <h5>{val?.mission_name}</h5>
-            </div>
-          </Item>
-        ))}
+        {data?.launchesPast &&
+          [...data.launchesPast]
+            .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
+            .map(val => (
+              <Item key={val?.id}>
+                <img className="bg" src={val?.links?.mission_patch || undefined} alt="Mission patch" />
+                <div className="content">
+                  <h5>{val?.mission_name}</h5>
+                  <p>{new Date(val?.launch_date_utc).toLocaleDateString()}</p>
+                  <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
+                    YouTube Video
+                  </a>
+                </div>
+              </Item>
+            ))}
       </List>
     </ScrollContainer>
   );

@@ -17,10 +17,12 @@ function App() {
   }, []);
 
   return (
-    <Container className="App">
-      <h1>Explore Space-X launches!</h1>
+    <div className="App">
+      <Container>
+        <h1>Explore Space-X launches!</h1>
+      </Container>
       <LaunchesList />
-    </Container>
+    </div>
   );
 }
 
