@@ -1326,7 +1326,7 @@ export type Uuid_Comparison_Exp = {
 export type GetLaunchesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetLaunchesQuery = { __typename?: 'Query', launchesPast?: Maybe<Array<Maybe<{ __typename?: 'Launch', mission_name?: Maybe<string>, id?: Maybe<string>, launch_date_utc?: Maybe<any>, launch_site?: Maybe<{ __typename?: 'LaunchSite', site_name_long?: Maybe<string> }>, rocket?: Maybe<{ __typename?: 'LaunchRocket', rocket_name?: Maybe<string> }>, ships?: Maybe<Array<Maybe<{ __typename?: 'Ship', name?: Maybe<string>, image?: Maybe<string> }>>>, links?: Maybe<{ __typename?: 'LaunchLinks', mission_patch?: Maybe<string>, video_link?: Maybe<string> }> }>>> };
+export type GetLaunchesQuery = { __typename?: 'Query', launchesPast?: Maybe<Array<Maybe<{ __typename?: 'Launch', mission_name?: Maybe<string>, id?: Maybe<string>, launch_date_unix?: Maybe<any>, launch_date_utc?: Maybe<any>, launch_site?: Maybe<{ __typename?: 'LaunchSite', site_name_long?: Maybe<string> }>, rocket?: Maybe<{ __typename?: 'LaunchRocket', rocket_name?: Maybe<string> }>, ships?: Maybe<Array<Maybe<{ __typename?: 'Ship', name?: Maybe<string>, image?: Maybe<string> }>>>, links?: Maybe<{ __typename?: 'LaunchLinks', mission_patch?: Maybe<string>, video_link?: Maybe<string> }> }>>> };
 
 
 export const GetLaunchesDocument = gql`
@@ -1344,6 +1344,7 @@ export const GetLaunchesDocument = gql`
       image
     }
     id
+    launch_date_unix
     launch_date_utc
     links {
       mission_patch
