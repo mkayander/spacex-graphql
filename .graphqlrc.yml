@@ -1,0 +1,6 @@
+schema: ./schema.graphql
+documents: src/api/**/*.graphql
+extensions:
+  endpoints:
+    main:
+      url: "https://api.spacex.land/graphql/"

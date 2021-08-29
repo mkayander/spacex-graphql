@@ -1,35 +1,27 @@
 import React, { useEffect } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import apollo from "./api/apollo";
-import { LAUNCHES_PAST } from "./api/queries";
 import { LaunchesList } from "./components";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import { GetLaunchesDocument } from "./api/generated/queries";
+import { Container } from "react-bootstrap";
 
 function App() {
-    useEffect(() => {
-        apollo
-            .query({
-                query: LAUNCHES_PAST,
-            })
-            .then(result => console.log(result));
-    }, []);
+  useEffect(() => {
+    apollo
+      .query({
+        query: GetLaunchesDocument,
+      })
+      .then(result => console.log(result));
+  }, []);
 
-    return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                    Learn React
-                </a>
-                <LaunchesList />
-            </header>
-        </div>
-    );
+  return (
+    <Container className="App">
+      <h1>Explore Space-X launches!</h1>
+      <LaunchesList />
+    </Container>
+  );
 }
 
 export default App;
