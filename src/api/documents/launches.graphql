@@ -29,6 +29,7 @@ query GetLaunches {
       image
     }
     id
+    launch_date_unix
     launch_date_utc
     #        launch_year
     #        launch_success
