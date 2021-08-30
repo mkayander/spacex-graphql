@@ -1,6 +1,10 @@
-query GetLaunches {
-  launchesPast(limit: 10) {
+query GetLaunches($limit: Int, $offset: Int) {
+  launchesPast(limit: $limit, offset: $offset) {
     mission_name
+    links {
+      flickr_images
+      video_link
+    }
     launch_site {
       site_name_long
     }
@@ -30,13 +34,12 @@ query GetLaunches {
     }
     id
     launch_date_unix
-    launch_date_utc
     #        launch_year
     #        launch_success
-    links {
-      #            article_link
-      mission_patch
-      video_link
-    }
+    #    links {
+    #      #            article_link
+    #      mission_patch
+    #      video_link
+    #    }
   }
 }

@@ -8,9 +8,14 @@ body {
   min-height: 100vh;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 #root {
   background: #282c34;
   color: white;
+  overflow-x: hidden;
 }
 
 code {

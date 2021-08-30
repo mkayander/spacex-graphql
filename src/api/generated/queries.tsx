@@ -1323,16 +1323,23 @@ export type Uuid_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['uuid']>>;
 };
 
-export type GetLaunchesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetLaunchesQueryVariables = Exact<{
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+}>;
 
 
-export type GetLaunchesQuery = { __typename?: 'Query', launchesPast?: Maybe<Array<Maybe<{ __typename?: 'Launch', mission_name?: Maybe<string>, id?: Maybe<string>, launch_date_unix?: Maybe<any>, launch_date_utc?: Maybe<any>, launch_site?: Maybe<{ __typename?: 'LaunchSite', site_name_long?: Maybe<string> }>, rocket?: Maybe<{ __typename?: 'LaunchRocket', rocket_name?: Maybe<string> }>, ships?: Maybe<Array<Maybe<{ __typename?: 'Ship', name?: Maybe<string>, image?: Maybe<string> }>>>, links?: Maybe<{ __typename?: 'LaunchLinks', mission_patch?: Maybe<string>, video_link?: Maybe<string> }> }>>> };
+export type GetLaunchesQuery = { __typename?: 'Query', launchesPast?: Maybe<Array<Maybe<{ __typename?: 'Launch', mission_name?: Maybe<string>, id?: Maybe<string>, launch_date_unix?: Maybe<any>, links?: Maybe<{ __typename?: 'LaunchLinks', flickr_images?: Maybe<Array<Maybe<string>>>, video_link?: Maybe<string> }>, launch_site?: Maybe<{ __typename?: 'LaunchSite', site_name_long?: Maybe<string> }>, rocket?: Maybe<{ __typename?: 'LaunchRocket', rocket_name?: Maybe<string> }>, ships?: Maybe<Array<Maybe<{ __typename?: 'Ship', name?: Maybe<string>, image?: Maybe<string> }>>> }>>> };
 
 
 export const GetLaunchesDocument = gql`
-    query GetLaunches {
-  launchesPast(limit: 10) {
+    query GetLaunches($limit: Int, $offset: Int) {
+  launchesPast(limit: $limit, offset: $offset) {
     mission_name
+    links {
+      flickr_images
+      video_link
+    }
     launch_site {
       site_name_long
     }
@@ -1345,11 +1352,6 @@ export const GetLaunchesDocument = gql`
     }
     id
     launch_date_unix
-    launch_date_utc
-    links {
-      mission_patch
-      video_link
-    }
   }
 }
     `;
@@ -1366,6 +1368,8 @@ export const GetLaunchesDocument = gql`
  * @example
  * const { data, loading, error } = useGetLaunchesQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
