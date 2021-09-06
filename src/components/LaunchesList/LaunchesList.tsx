@@ -87,7 +87,7 @@ const Item = styled.li`
   }
 `;
 
-const LaunchesList = () => {
+const LaunchesList: React.FC = () => {
   const { loading, data, error } = useQuery<GetLaunchesQuery, GetLaunchesQueryVariables>(GetLaunchesDocument, {
     variables: { limit: 10 },
   });
