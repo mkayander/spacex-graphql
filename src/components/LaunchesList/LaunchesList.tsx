@@ -4,6 +4,8 @@ import { useQuery } from "@apollo/client";
 import { GetLaunchesDocument, GetLaunchesQuery, GetLaunchesQueryVariables } from "../../api/generated/queries";
 import styled from "styled-components";
 import { useScrollBoost } from "react-scrollbooster";
+import { Maybe } from "graphql/jsutils/Maybe";
+import { getYouTubeThumbnailImageUrls } from "../../api/utils";
 
 const Viewport = styled.div`
   //overflow-x: scroll;
@@ -103,6 +105,18 @@ const LaunchesList = () => {
 
   if (loading) return <h5>Loading data...</h5>;
 
+  const getImageUrl = (item: GetLaunchesQuery["launchesPast"] extends Maybe<Array<infer U>> ? U : never) => {
+    const flickr_images = item?.links?.flickr_images;
+    if (flickr_images && flickr_images.length > 0) {
+      return flickr_images[0];
+    } else {
+      const youtubeLink = item?.links?.video_link;
+      if (youtubeLink && youtubeLink.length > 8) {
+        return getYouTubeThumbnailImageUrls(youtubeLink, 1)[0];
+      }
+    }
+  };
+
   return (
     // <ScrollContainer
     //   className={styles.root}
@@ -115,11 +129,7 @@ const LaunchesList = () => {
             .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
             .map(val => (
               <Item key={val?.id}>
-                <img
-                  className="bg"
-                  src={val?.links?.flickr_images?.find((_, index) => index === 0) || undefined}
-                  alt="Mission card background"
-                />
+                <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
                 <div className="content">
                   <h5>{val?.mission_name}</h5>
                   <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
