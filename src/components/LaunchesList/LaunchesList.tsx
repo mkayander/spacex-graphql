@@ -94,14 +94,12 @@ const LaunchesList: React.FC = () => {
 
   if (error) console.error(error);
 
-  const [viewport, scrollbooster] = useScrollBoost({
+  const [viewport] = useScrollBoost({
     direction: "horizontal",
     friction: 0.1,
     scrollMode: "transform",
     // ...optional options
   });
-
-  console.log(viewport, scrollbooster);
 
   if (loading) return <h5>Loading data...</h5>;
 
@@ -118,10 +116,6 @@ const LaunchesList: React.FC = () => {
   };
 
   return (
-    // <ScrollContainer
-    //   className={styles.root}
-    //   vertical={false}
-    //   horizontal={true}>
     <Viewport ref={viewport}>
       <List>
         {data?.launchesPast &&
@@ -141,7 +135,6 @@ const LaunchesList: React.FC = () => {
             ))}
       </List>
     </Viewport>
-    // </ScrollContainer>
   );
 };
 
