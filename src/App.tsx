@@ -12,7 +12,7 @@ function App() {
     apollo
       .query<GetLaunchesQuery, GetLaunchesQueryVariables>({
         query: GetLaunchesDocument,
-        variables: { limit: 10, offset: 10 },
+        variables: { limit: 10, offset: 0 },
       })
       .then(result => console.log(result));
   }, []);
