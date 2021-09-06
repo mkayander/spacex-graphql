@@ -110,7 +110,7 @@ const LaunchesList: React.FC = () => {
     } else {
       const youtubeLink = item?.links?.video_link;
       if (youtubeLink && youtubeLink.length > 8) {
-        return getYouTubeThumbnailImageUrls(youtubeLink, 1)[0];
+        return getYouTubeThumbnailImageUrls(youtubeLink);
       }
     }
   };
