@@ -108,6 +108,9 @@ const LaunchesList: React.FC = () => {
     direction: "horizontal",
     friction: 0.1,
     scrollMode: "transform",
+    onUpdate: () => {
+      // console.log(ev);
+    },
     // ...optional options
   });
 
@@ -133,14 +136,16 @@ const LaunchesList: React.FC = () => {
             .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
             .map(val => (
               <Item key={val?.id}>
-                <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
-                <div className="content">
-                  <h5>{val?.mission_name}</h5>
-                  <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
-                  <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
-                    YouTube Video
-                  </a>
-                </div>
+                <Card>
+                  <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
+                  <div className="content">
+                    <h5>{val?.mission_name}</h5>
+                    <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
+                    <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
+                      YouTube Video
+                    </a>
+                  </div>
+                </Card>
               </Item>
             ))}
       </List>
