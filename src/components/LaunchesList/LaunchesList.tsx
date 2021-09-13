@@ -8,34 +8,32 @@ import { Maybe } from "graphql/jsutils/Maybe";
 import { getYouTubeThumbnailImageUrls } from "../../api/utils";
 
 const Viewport = styled.div`
-  //overflow-x: scroll;
-  //display: flex;
-  //justify-content: flex-start;
-  //align-items: flex-start;
-  //position: relative;
-  //overflow: hidden;
-  //text-align: left;
-  //overflow-x: scroll;
+  position: relative;
+  height: 600px;
 `;
 
 const List = styled.ul`
-  height: 600px;
-  //width: 100%;
+  height: 100%;
   min-width: 100vw;
-  //position: relative;
-  //justify-content: flex-start;
   display: flex;
   flex-flow: row nowrap;
-  //overflow-x: scroll;
 
-  padding: 2rem;
+  & > *:first-child {
+    padding-left: 4rem;
+  }
 
-  li:not(:first-child) {
-    margin-left: 1.25rem;
+  & > *:last-child {
+    padding-right: 4rem;
   }
 `;
 
 const Item = styled.li`
+  padding: 0 1rem;
+  display: flex;
+`;
+
+const Card = styled.div`
+  transition: 0.3s;
   position: relative;
   display: flex;
   flex-flow: column-reverse wrap;
@@ -54,7 +52,19 @@ const Item = styled.li`
     object-fit: cover;
   }
 
-  :after {
+  &:hover {
+    transform: scale(1.1);
+    z-index: 10;
+
+    box-shadow: rgba(50, 80, 134, 0.38) 0 3px 20px 0;
+
+    &:after {
+      opacity: 0.5;
+    }
+  }
+
+  &:after {
+    transition: opacity 0.3s;
     content: "";
     position: absolute;
     width: 100%;
@@ -62,7 +72,7 @@ const Item = styled.li`
     top: 0;
     left: 0;
     background: linear-gradient(to top, black 0%, transparent 50%);
-    opacity: 0.7;
+    opacity: 0.9;
     z-index: 2;
   }
 
