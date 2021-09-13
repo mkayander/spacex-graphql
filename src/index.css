@@ -18,6 +18,10 @@ body {
   overflow-x: hidden;
 }
 
+#root ul {
+  padding-left: 0;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
