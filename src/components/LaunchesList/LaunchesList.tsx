@@ -1,11 +1,13 @@
-import React from "react";
-import { useQuery } from "@apollo/client";
+import React, { useEffect } from "react";
 
-import { GetLaunchesDocument, GetLaunchesQuery, GetLaunchesQueryVariables } from "../../api/generated/queries";
+import { GetLaunchesQuery } from "../../api/generated/queries";
 import styled from "styled-components";
 import { useScrollBoost } from "react-scrollbooster";
 import { Maybe } from "graphql/jsutils/Maybe";
 import { getYouTubeThumbnailImageUrls } from "../../api/utils";
+import { useAppSelector } from "../../store/hooks";
+import { fetchLaunchesAction, selectLaunches } from "../../store/slices/launchesSlice";
+import { useDispatch } from "react-redux";
 
 const Viewport = styled.div`
   position: relative;
@@ -98,11 +100,13 @@ const Card = styled.div`
 `;
 
 const LaunchesList: React.FC = () => {
-  const { loading, data, error } = useQuery<GetLaunchesQuery, GetLaunchesQueryVariables>(GetLaunchesDocument, {
-    variables: { limit: 10 },
-  });
+  const { loading, data } = useAppSelector(selectLaunches);
 
-  if (error) console.error(error);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchLaunchesAction());
+  }, [dispatch]);
 
   const [viewport] = useScrollBoost({
     direction: "horizontal",
@@ -131,23 +135,22 @@ const LaunchesList: React.FC = () => {
   return (
     <Viewport ref={viewport}>
       <List>
-        {data?.launchesPast &&
-          [...data.launchesPast]
-            .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
-            .map(val => (
-              <Item key={val?.id}>
-                <Card>
-                  <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
-                  <div className="content">
-                    <h5>{val?.mission_name}</h5>
-                    <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
-                    <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
-                      YouTube Video
-                    </a>
-                  </div>
-                </Card>
-              </Item>
-            ))}
+        {[...data]
+          .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
+          .map(val => (
+            <Item key={val?.id}>
+              <Card>
+                <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
+                <div className="content">
+                  <h5>{val?.mission_name}</h5>
+                  <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
+                  <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
+                    YouTube Video
+                  </a>
+                </div>
+              </Card>
+            </Item>
+          ))}
       </List>
     </Viewport>
   );
