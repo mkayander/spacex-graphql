@@ -1,7 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
+import launchesSlice from "./slices/launchesSlice";
+import logger from "redux-logger";
+import thunk from "redux-thunk";
 
 export const store = configureStore({
-  reducer: {},
+  middleware: [logger, thunk],
+  reducer: {
+    launches: launchesSlice,
+  },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
