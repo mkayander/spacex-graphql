@@ -99,6 +99,36 @@ const Card = styled.div`
   }
 `;
 
+const Spinner = styled.div`
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 80px;
+  width: 80px;
+
+  &:after {
+    content: "";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid;
+    border-color: #fcf #fcf #fcf transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+  }
+
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 const LaunchesList: React.FC = () => {
   const { loading, data } = useAppSelector(selectLaunches);
 
@@ -118,8 +148,6 @@ const LaunchesList: React.FC = () => {
     // ...optional options
   });
 
-  if (loading) return <h5>Loading data...</h5>;
-
   const getImageUrl = (item: GetLaunchesQuery["launchesPast"] extends Maybe<Array<infer U>> ? U : never) => {
     const flickr_images = item?.links?.flickr_images;
     if (flickr_images && flickr_images.length > 0) {
@@ -134,6 +162,7 @@ const LaunchesList: React.FC = () => {
 
   return (
     <Viewport ref={viewport}>
+      {loading && <Spinner />}
       <List>
         {[...data]
           .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
