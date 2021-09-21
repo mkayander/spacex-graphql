@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
 
-import { GetLaunchesQuery } from "../../api/generated/queries";
 import styled from "styled-components";
 import { useScrollBoost } from "react-scrollbooster";
-import { Maybe } from "graphql/jsutils/Maybe";
 import { getYouTubeThumbnailImageUrls } from "../../api/utils";
 import { useAppSelector } from "../../store/hooks";
-import { fetchLaunchesAction, selectLaunches } from "../../store/slices/launchesSlice";
+import { fetchNextLaunches, Launch, selectLaunches } from "../../store/slices/launchesSlice";
 import { useDispatch } from "react-redux";
 
 const Viewport = styled.div`
@@ -135,20 +133,27 @@ const LaunchesList: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchLaunchesAction());
+    dispatch(fetchNextLaunches());
   }, [dispatch]);
 
-  const [viewport] = useScrollBoost({
+  const [viewport, scrollBooster] = useScrollBoost({
     direction: "horizontal",
     friction: 0.1,
     scrollMode: "transform",
-    onUpdate: () => {
-      // console.log(ev);
-    },
-    // ...optional options
   });
 
-  const getImageUrl = (item: GetLaunchesQuery["launchesPast"] extends Maybe<Array<infer U>> ? U : never) => {
+  useEffect(() => {
+    scrollBooster?.updateOptions({
+      onUpdate: ev => {
+        if (data.length > 0 && ev.borderCollision.right && !loading) {
+          console.log("Fetch next!!");
+          dispatch(fetchNextLaunches());
+        }
+      },
+    });
+  }, [data.length, dispatch, loading, scrollBooster]);
+
+  const getImageUrl = (item: Launch) => {
     const flickr_images = item?.links?.flickr_images;
     if (flickr_images && flickr_images.length > 0) {
       return flickr_images[0];
@@ -166,20 +171,23 @@ const LaunchesList: React.FC = () => {
       <List>
         {[...data]
           .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
-          .map(val => (
-            <Item key={val?.id}>
-              <Card>
-                <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
-                <div className="content">
-                  <h5>{val?.mission_name}</h5>
-                  <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
-                  <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
-                    YouTube Video
-                  </a>
-                </div>
-              </Card>
-            </Item>
-          ))}
+          .map(
+            val =>
+              val && (
+                <Item key={val.id}>
+                  <Card>
+                    <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
+                    <div className="content">
+                      <h5>{val?.mission_name}</h5>
+                      <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
+                      <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
+                        YouTube Video
+                      </a>
+                    </div>
+                  </Card>
+                </Item>
+              )
+          )}
       </List>
     </Viewport>
   );
