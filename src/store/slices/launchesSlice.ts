@@ -27,13 +27,17 @@ const launchesSlice = createSlice({
     fetch: state => {
       state.loading = true;
     },
-    update: (state, action: PayloadAction<Launch[]>) => {
-      state.data = action.payload;
+    finish: state => {
       state.loading = false;
+    },
+    updateAll: (state, action: PayloadAction<Launch[]>) => {
+      state.data = action.payload;
+    },
+    append: (state, action: PayloadAction<Launch[]>) => {
+      state.data = [...state.data, ...action.payload];
     },
     error: (state, action: PayloadAction<Error>) => {
       state.error = action.payload;
-      state.loading = false;
     },
   },
 });
@@ -46,24 +50,27 @@ export default launchesSlice.reducer;
 
 // Thunk Actions
 
-export const fetchLaunchesAction = (): ThunkAction<void, RootState, unknown, any> => {
-  return async dispatch => {
+export const fetchNextLaunches = (): ThunkAction<void, RootState, unknown, any> => {
+  return async (dispatch, getState) => {
     dispatch(launchesActions.fetch());
 
     try {
+      const { offsetStep, data } = getState().launches;
       const response = await apollo.query<GetLaunchesQuery, GetLaunchesQueryVariables>({
         query: GetLaunchesDocument,
-        variables: { limit: 10, offset: 0 },
+        variables: { limit: offsetStep, offset: data.length },
       });
       const result = response.data.launchesPast;
 
-      if (result === undefined) {
+      if (result?.length && result.length > 0) {
+        dispatch(launchesActions.append(result));
+      } else {
         dispatch(launchesActions.error(new Error("Got empty launches result!")));
       }
-
-      dispatch(launchesActions.update(response.data.launchesPast || []));
     } catch (e) {
       dispatch(launchesActions.error(e as Error));
+    } finally {
+      dispatch(launchesActions.finish());
     }
   };
 };
