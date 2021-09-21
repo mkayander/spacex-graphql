@@ -9,6 +9,7 @@ export type Launch = ArrayElement<GetLaunchesQuery["launchesPast"]>;
 
 type LaunchesState = {
   loading: boolean;
+  offsetStep: number;
   data: Launch[];
   error?: Error;
 };
@@ -16,6 +17,7 @@ type LaunchesState = {
 const initialState: LaunchesState = {
   loading: false,
   data: [],
+  offsetStep: 10,
 };
 
 const launchesSlice = createSlice({
