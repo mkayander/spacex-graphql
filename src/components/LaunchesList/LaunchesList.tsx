@@ -105,6 +105,8 @@ const Spinner = styled.div`
   height: 80px;
   width: 80px;
 
+  z-index: 1000;
+
   &:after {
     content: "";
     display: block;
@@ -128,7 +130,7 @@ const Spinner = styled.div`
 `;
 
 const LaunchesList: React.FC = () => {
-  const { loading, data } = useAppSelector(selectLaunches);
+  const { loading, data, isFull } = useAppSelector(selectLaunches);
 
   const dispatch = useDispatch();
 
@@ -145,13 +147,13 @@ const LaunchesList: React.FC = () => {
   useEffect(() => {
     scrollBooster?.updateOptions({
       onUpdate: ev => {
-        if (data.length > 0 && ev.borderCollision.right && !loading) {
+        if (!isFull && data.length > 0 && ev.borderCollision.right && !loading) {
           console.log("Fetch next!!");
           dispatch(fetchNextLaunches());
         }
       },
     });
-  }, [data.length, dispatch, loading, scrollBooster]);
+  }, [data.length, dispatch, isFull, loading, scrollBooster]);
 
   const getImageUrl = (item: Launch) => {
     const flickr_images = item?.links?.flickr_images;
@@ -170,7 +172,7 @@ const LaunchesList: React.FC = () => {
       {loading && <Spinner />}
       <List>
         {[...data]
-          .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
+          // .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
           .map(
             val =>
               val && (
@@ -178,6 +180,7 @@ const LaunchesList: React.FC = () => {
                   <Card>
                     <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
                     <div className="content">
+                      <h5>${val.id}</h5>
                       <h5>{val?.mission_name}</h5>
                       <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
                       <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
