@@ -141,12 +141,11 @@ const LaunchesList: React.FC = () => {
               runUpdate();
             }
           }, 8)
-        : null;
+        : () => {};
 
-    onUpdate &&
-      scrollBooster?.updateOptions({
-        onUpdate,
-      });
+    scrollBooster?.updateOptions({
+      onUpdate,
+    });
   }, [data.length, dispatch, isFull, loading, scrollBooster]);
 
   const getImageUrl = (item: Launch) => {
