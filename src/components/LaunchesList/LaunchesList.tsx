@@ -134,15 +134,19 @@ const LaunchesList: React.FC = () => {
       dispatch(fetchNextLaunches());
     }, 2000);
 
-    const onUpdate = throttle((ev: ScrollingState) => {
-      if (!isFull && data.length > 0 && ev.borderCollision.right && !loading) {
-        runUpdate();
-      }
-    }, 8);
+    const onUpdate =
+      !isFull && !loading && data.length > 0
+        ? throttle((ev: ScrollingState) => {
+            if (ev.borderCollision.right) {
+              runUpdate();
+            }
+          }, 8)
+        : null;
 
-    scrollBooster?.updateOptions({
-      onUpdate,
-    });
+    onUpdate &&
+      scrollBooster?.updateOptions({
+        onUpdate,
+      });
   }, [data.length, dispatch, isFull, loading, scrollBooster]);
 
   const getImageUrl = (item: Launch) => {
