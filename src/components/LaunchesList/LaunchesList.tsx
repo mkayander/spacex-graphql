@@ -8,6 +8,8 @@ import { fetchNextLaunches, Launch, selectLaunches } from "../../store/slices/la
 import { useDispatch } from "react-redux";
 import cooldown from "../../utils/cooldown";
 import { Spinner } from "../index";
+import throttle from "../../utils/throttle";
+import { ScrollingState } from "scrollbooster";
 
 const Viewport = styled.div`
   position: relative;
@@ -132,12 +134,14 @@ const LaunchesList: React.FC = () => {
       dispatch(fetchNextLaunches());
     }, 2000);
 
+    const onUpdate = throttle((ev: ScrollingState) => {
+      if (!isFull && data.length > 0 && ev.borderCollision.right && !loading) {
+        runUpdate();
+      }
+    }, 8);
+
     scrollBooster?.updateOptions({
-      onUpdate: ev => {
-        if (!isFull && data.length > 0 && ev.borderCollision.right && !loading) {
-          runUpdate();
-        }
-      },
+      onUpdate,
     });
   }, [data.length, dispatch, isFull, loading, scrollBooster]);
 
