@@ -63,7 +63,7 @@ export const fetchNextLaunches = (): ThunkAction<void, RootState, unknown, any> 
       const { offsetStep, data } = getState().launches;
       const response = await apollo.query<GetLaunchesQuery, GetLaunchesQueryVariables>({
         query: GetLaunchesDocument,
-        variables: { limit: offsetStep, offset: data.length },
+        variables: { limit: offsetStep, offset: data.length, sort: "-launch_date_utc" },
       });
       const result = response.data.launchesPast;
 
