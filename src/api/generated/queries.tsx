@@ -1326,6 +1326,7 @@ export type Uuid_Comparison_Exp = {
 export type GetLaunchesQueryVariables = Exact<{
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
+  sort?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -1333,8 +1334,8 @@ export type GetLaunchesQuery = { __typename?: 'Query', launchesPast?: Maybe<Arra
 
 
 export const GetLaunchesDocument = gql`
-    query GetLaunches($limit: Int, $offset: Int) {
-  launchesPast(limit: $limit, offset: $offset) {
+    query GetLaunches($limit: Int, $offset: Int, $sort: String) {
+  launchesPast(limit: $limit, offset: $offset, sort: $sort) {
     mission_name
     links {
       flickr_images
@@ -1370,6 +1371,7 @@ export const GetLaunchesDocument = gql`
  *   variables: {
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
  *   },
  * });
  */

@@ -1,5 +1,5 @@
-query GetLaunches($limit: Int, $offset: Int) {
-  launchesPast(limit: $limit, offset: $offset) {
+query GetLaunches($limit: Int, $offset: Int, $sort: String) {
+  launchesPast(limit: $limit, offset: $offset, sort: $sort) {
     mission_name
     links {
       flickr_images

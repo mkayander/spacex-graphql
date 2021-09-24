@@ -145,26 +145,24 @@ const LaunchesList: React.FC = () => {
     <Viewport ref={viewport}>
       {loading && <Spinner />}
       <List>
-        {[...data]
-          // .sort((a, b) => b?.launch_date_unix - a?.launch_date_unix)
-          .map(
-            val =>
-              val && (
-                <Item key={val.id}>
-                  <Card>
-                    <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
-                    <div className="content">
-                      <h5>${val.id}</h5>
-                      <h5>{val?.mission_name}</h5>
-                      <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
-                      <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
-                        YouTube Video
-                      </a>
-                    </div>
-                  </Card>
-                </Item>
-              )
-          )}
+        {[...data].map(
+          val =>
+            val && (
+              <Item key={val.id}>
+                <Card>
+                  <img className="bg" src={getImageUrl(val) || undefined} alt="Mission card background" />
+                  <div className="content">
+                    <h5>${val.id}</h5>
+                    <h5>{val?.mission_name}</h5>
+                    <p>{new Date(val?.launch_date_unix * 1000).toLocaleDateString()}</p>
+                    <a href={val?.links?.video_link || undefined} target="_blank" rel="noreferrer">
+                      YouTube Video
+                    </a>
+                  </div>
+                </Card>
+              </Item>
+            )
+        )}
       </List>
     </Viewport>
   );
