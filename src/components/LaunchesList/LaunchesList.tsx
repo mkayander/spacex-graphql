@@ -115,11 +115,15 @@ const LaunchesList: React.FC = () => {
   });
 
   useEffect(() => {
+    const runUpdate = cooldown(() => {
+      console.log("Fetch next!!");
+      dispatch(fetchNextLaunches());
+    }, 2000);
+
     scrollBooster?.updateOptions({
       onUpdate: ev => {
         if (!isFull && data.length > 0 && ev.borderCollision.right && !loading) {
-          console.log("Fetch next!!");
-          dispatch(fetchNextLaunches());
+          runUpdate();
         }
       },
     });
