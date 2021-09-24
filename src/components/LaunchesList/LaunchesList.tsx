@@ -99,6 +99,18 @@ const Card = styled.div`
   }
 `;
 
+const Overlay = styled.div`
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`;
+
 const LaunchesList: React.FC = () => {
   const { loading, data, isFull } = useAppSelector(selectLaunches);
 
@@ -143,7 +155,11 @@ const LaunchesList: React.FC = () => {
 
   return (
     <Viewport ref={viewport}>
-      {loading && <Spinner />}
+      {loading && (
+        <Overlay>
+          <Spinner />
+        </Overlay>
+      )}
       <List>
         {[...data].map(
           val =>
